@@ -31,3 +31,5 @@ The key stakeholders are:
 1. Urska Srsen, Bellabeat’s cofounder and Chief Creative Officer
 2. Sando Mur, Mathematician and Bellabeat’s cofounder; key member of the Bellabeat executive team
 3. Bellabeat marketing analysis team
+
+[Ask](Pre-Analysis.md)
