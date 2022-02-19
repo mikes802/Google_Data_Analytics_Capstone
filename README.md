@@ -8,7 +8,7 @@ To accomplish this and answer the business question, I will need to follow the d
 # Table of Contents
 1. [Scenario](#scenario)
 2. [Data](#data)
-3. [Ask](main/Pre-Analysis.md#ask)
+3. [Ask](Pre-Analysis.md#ask)
 4. [Prepare](#prepare)
 5. [Process](#process)
 
