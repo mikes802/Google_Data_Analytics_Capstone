@@ -106,3 +106,33 @@ FROM (
     FROM `tribal-isotope-321016.fitbit_tracker_data.sleep_day_cleaned`
 ) AS subquery;
 ```
+Having confirmed that duplicates exist in the data, I know I will need to be careful when conducting my analysis.
+
+I want to find a faster way to change the date data type in the tables. I think R may be useful and give it a try.
+
+Using RStudio, I need to install the `tidyverse` package to upload the libraries I will require to change the data type.
+```
+install.packages("tidyverse")
+```
+Load `dplyr` and `lubridate` libraries in order to read in csv file and change data type for date.
+```
+library(dplyr)
+library(lubridate)
+```
+Uploaded csv file to RStudio and then read into R as dataframe.
+```
+hour_cal_df <- read.csv("hourlyCalories_merged.csv")
+```
+Checked data
+```
+head(hour_cal_df)
+```
+Checked structure, noted 'ActivityHour' datatype as `chr` (a string).
+```
+str(hour_cal_df)
+```
+Used pipe to filter for the columns I wanted after changing the format of the "ActivityHour" column from `chr` to `POSIXct` (timestamp). I saved as new_df dataframe.
+```
+new_df <- mutate(hour_cal_df, date_time=mdy_hms(ActivityHour)) %>% 
+  select(Id, date_time, Calories)
+```
