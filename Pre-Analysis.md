@@ -1,7 +1,7 @@
-#Pre-Analysis
-##Ask
-###Guiding Questions
-What is the problem you are trying to solve?
+# Pre-Analysis
+## Ask
+### Guiding Questions
+*What is the problem you are trying to solve?
 
 Gain insight into consumer use trends of smart devices.
 
