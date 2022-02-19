@@ -32,4 +32,4 @@ The key stakeholders are:
 2. Sando Mur, Mathematician and Bellabeat’s cofounder; key member of the Bellabeat executive team
 3. Bellabeat marketing analysis team
 
-[Ask](/Pre-Analysis.md)
+[Ask](/Pre-Analysis.md#process)
