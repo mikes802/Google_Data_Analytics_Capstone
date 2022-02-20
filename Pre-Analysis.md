@@ -149,7 +149,7 @@ Wrote this dataframe to csv.
 ```
 write.csv(new_df, "...\\hour_cal_date_fixed.csv")
 ```
-While this method did work, I wanted to see if there was an easier way to do this directly in BigQuery. One table in particular was actually larger after I cleaned it and was impossible to upload to BigQuery. I settled on the following method.
+While this method did work, I wanted to see if there was an easier way to do this directly in BigQuery. One table in particular was actually larger after I cleaned it using R and was impossible to upload to BigQuery. I settled on the following method.
 1. I manually changed data types to `STRINGS` within the schema when uploading to BigQuery.
 2. I could then `CAST` some strings to `INT64` and `PARSE` the date column to `TIMESTAMP` as I did for the following `hourly_intensities` table for example.
 ```
@@ -160,3 +160,14 @@ SELECT
     SAFE_CAST(AverageIntensity AS INT64) AS AverageIntensity
 FROM `tribal-isotope-321016.fitbit.hourly_intensities`;
 ```
+I created a table from this query.
+```
+CREATE TABLE IF NOT EXISTS `tribal-isotope-321016.fitbit.hourly_intense_proper` AS
+SELECT
+    SAFE_CAST(Id AS INT64) AS Id,
+    SAFE.PARSE_TIMESTAMP('%m/%d/%Y %r', ActivityHour) AS ActivityHour,
+    SAFE_CAST(TotalIntensity AS INT64) AS TotalIntensity,
+    SAFE_CAST(AverageIntensity AS INT64) AS AverageIntensity
+FROM `tribal-isotope-321016.fitbit.hourly_intensities`;
+```
+I followed this method for multiple tables in order to prepare them for analysis.
