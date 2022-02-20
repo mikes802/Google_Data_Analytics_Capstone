@@ -70,7 +70,7 @@ Yes, I have created a changelog.
 ### Key Tasks
 *1. Clean the data*
 
-Having discovered that BigQuery would not upload a table due to a problem with the datetime column, I opened the sleepDay_merged table in Excel to change that column to a date datatype so that it would be recognized by BigQuery. I renamed this table sleepDay_merged_cleaned and successfully uploaded it to my fitbit dataset in BigQuery.
+Having discovered that BigQuery would not upload a table due to a problem with the datetime column, I opened the sleepDay_merged table in Excel to change that column to a date data type so that it would be recognized by BigQuery. I renamed this table sleep_day_cleaned and successfully uploaded it to my fitbit dataset in BigQuery.
 
 Next, using the following query, I discovered that three entries looked to be duplicates.
 ```
@@ -118,6 +118,7 @@ Load `dplyr` and `lubridate` libraries in order to read in csv file and change d
 ```
 library(dplyr)
 library(lubridate)
+library(readr)
 ```
 Uploaded csv file to RStudio and then read into R as dataframe.
 ```
@@ -131,8 +132,31 @@ Checked structure, noted 'ActivityHour' datatype as `chr` (a string).
 ```
 str(hour_cal_df)
 ```
-Used pipe to filter for the columns I wanted after changing the format of the "ActivityHour" column from `chr` to `POSIXct` (timestamp). I saved as new_df dataframe.
+Used pipe to filter for the columns I wanted after changing the format of the "ActivityHour" column from `chr` to `POSIXct` (TIMESTAMP). I saved as new_df dataframe.
 ```
 new_df <- mutate(hour_cal_df, date_time=mdy_hms(ActivityHour)) %>% 
   select(Id, date_time, Calories)
+```
+Checked data
+```
+head(new_df)
+```
+Checked structure and noted that new 'date_time' column data type is now `POSIXct` (TIMESTAMP).
+```
+str(new_df)
+```
+Wrote this dataframe to csv.
+```
+write.csv(new_df, "...\\hour_cal_date_fixed.csv")
+```
+While this method did work, I wanted to see if there was an easier way to do this directly in BigQuery. One table in particular was actually larger after I cleaned it and was impossible to upload to BigQuery. I settled on the following method.
+1. I manually changed data types to `STRINGS` within the schema when uploading to BigQuery.
+2. I could then `CAST` some strings to `INT64` and `PARSE` the date column to `TIMESTAMP` as I did for the following `hourly_intensities` table for example.
+```
+SELECT
+    SAFE_CAST(Id AS INT64) AS Id,
+    SAFE.PARSE_TIMESTAMP('%m/%d/%Y %r', ActivityHour) AS ActivityHour,
+    SAFE_CAST(TotalIntensity AS INT64) AS TotalIntensity,
+    SAFE_CAST(AverageIntensity AS INT64) AS AverageIntensity
+FROM `tribal-isotope-321016.fitbit.hourly_intensities`;
 ```
