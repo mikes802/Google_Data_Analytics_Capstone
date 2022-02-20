@@ -170,4 +170,4 @@ SELECT
     SAFE_CAST(AverageIntensity AS INT64) AS AverageIntensity
 FROM `tribal-isotope-321016.fitbit.hourly_intensities`;
 ```
-I followed this method for multiple tables in order to prepare them for analysis.
+I followed this method for multiple tables in order to prepare them for [analysis](/Analysis.md#analysis).
