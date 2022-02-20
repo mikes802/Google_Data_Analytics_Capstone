@@ -175,10 +175,10 @@ CREATE TABLE `tribal-isotope-321016.fitbit_tracker_data.avg_sleep_data` AS (
 Now I will join them using a `FULL OUTER JOIN`.
 ```
 SELECT 
-daily_activity_data.*, sleep_day_data.*
+    daily_activity_data.*, sleep_day_data.*
 FROM 
-`tribal-isotope-321016.fitbit_tracker_data.avg_daily_data` AS daily_activity_data
+    `tribal-isotope-321016.fitbit_tracker_data.avg_daily_data` AS daily_activity_data
 FULL OUTER JOIN
-`tribal-isotope-321016.fitbit_tracker_data.avg_sleep_data` AS sleep_day_data ON
-daily_activity_data.Id = sleep_day_data.Id;
+    `tribal-isotope-321016.fitbit_tracker_data.avg_sleep_data` AS sleep_day_data ON
+    daily_activity_data.Id = sleep_day_data.Id;
 ```
