@@ -172,7 +172,7 @@ CREATE TABLE `tribal-isotope-321016.fitbit_tracker_data.avg_sleep_data` AS (
         Id
 );
 ```
-Now I will join them using an `INNER JOIN`. This will drop the IDs of the participants who did not have any `SleepDay` records. Every participant who shows up in this table will have information for both daily activity data and sleep data.
+Now I will join them using an `INNER JOIN`. This will drop the IDs of the participants who did not have any `SleepDay` records. Every participant who shows up in this table will have both daily activity and sleep data.
 ```
 SELECT 
     daily_activity_data.*, sleep_day_data.*
@@ -210,4 +210,91 @@ There is also one clear negative relationship.
 
 ![Sleep Days v Ave Sed Min](https://user-images.githubusercontent.com/99853599/154880221-6d9ec679-3d94-4a73-a96b-791a6c7dedf1.PNG)
 
+I notice that there is a fairly clear demarcation between those who actively used the sleep functions and those who barely used them or didn't use them at all. I want to check the average numbers between the two groups. I will demarcate the groups at <= 5 days and >= 8 days.
 
+Group A is >= 8 days and 16 participants meet this criteria.
+```
+WITH cte_table AS (
+    SELECT 
+        daily_activity_data.*, sleep_day_data.number_sleep_days, sleep_day_data.avg_min_sleep, sleep_day_data.avg_time_in_bed
+    FROM 
+        `tribal-isotope-321016.fitbit.avg_daily_data` AS daily_activity_data
+    INNER JOIN
+        `tribal-isotope-321016.fitbit.avg_sleep_data` AS sleep_day_data ON
+        daily_activity_data.Id = sleep_day_data.Id
+)
+SELECT 
+    COUNT(DISTINCT Id),
+    ROUND(AVG(number_dates), 2) AS gave_num_dates,
+    ROUND(AVG(avg_tot_steps), 2) AS gavg_tot_steps,
+    ROUND(AVG(avg_tot_distance), 2) AS gavg_tot_dist,
+    ROUND(AVG(avg_very_act_dist), 2) AS gavg_very_act_dist,
+    ROUND(AVG(avg_mod_act_dist), 2) AS gavg_mod_act_dist,
+    ROUND(AVG(avg_lit_act_dist), 2) AS gavg_lit_act_dist,
+    ROUND(AVG(avg_very_act_min), 2) AS gavg_very_act_min,
+    ROUND(AVG(avg_fair_act_min), 2) AS gavg_fair_act_min,
+    ROUND(AVG(avg_lit_act_min), 2) AS gavg_lit_act_min,
+    ROUND(AVG(avg_sed_min), 2) AS gavg_sed_min,
+    ROUND(AVG(avg_calories), 2) AS gavg_calories
+FROM cte_table
+WHERE number_sleep_days >= 8;
+```
+
+| Group A Variable | Group A Value |
+| --- | --- |
+| number of participants | 16 |
+| gave_num_dates | 29.75 |
+| gavg_tot_steps | 7850.51 |
+| gavg_tot_dist | 5.53 |
+| gavg_very_act_dist | 1.27 |
+| gavg_mod_act_dist | 0.7 |
+| gavg_lit_act_dist | 3.49 |
+| gavg_very_act_min | 22.02 |
+| gavg_fair_act_min | 16.88 |
+| gavg_lit_act_min	| 197.84 |
+| gavg_sed_min | 802.92 |
+| gavg_calories | 2314.19 |	
+
+Group B is <= 5 days and 17 participants meet this criteria. For this query I will have to do a `FULL OUTER JOIN` to bring back in those participants whose sleep data `IS NULL`. In other words, they didn't use the sleep functionality at all.
+```
+WITH cte_table AS (
+    SELECT 
+        daily_activity_data.*, sleep_day_data.number_sleep_days, sleep_day_data.avg_min_sleep, sleep_day_data.avg_time_in_bed
+    FROM 
+        `tribal-isotope-321016.fitbit.avg_daily_data` AS daily_activity_data
+    FULL OUTER JOIN
+        `tribal-isotope-321016.fitbit.avg_sleep_data` AS sleep_day_data ON
+        daily_activity_data.Id = sleep_day_data.Id
+)
+SELECT 
+    COUNT(DISTINCT Id),
+    ROUND(AVG(number_dates), 2) AS gave_num_dates,
+    ROUND(AVG(avg_tot_steps), 2) AS gavg_tot_steps,
+    ROUND(AVG(avg_tot_distance), 2) AS gavg_tot_dist,
+    ROUND(AVG(avg_very_act_dist), 2) AS gavg_very_act_dist,
+    ROUND(AVG(avg_mod_act_dist), 2) AS gavg_mod_act_dist,
+    ROUND(AVG(avg_lit_act_dist), 2) AS gavg_lit_act_dist,
+    ROUND(AVG(avg_very_act_min), 2) AS gavg_very_act_min,
+    ROUND(AVG(avg_fair_act_min), 2) AS gavg_fair_act_min,
+    ROUND(AVG(avg_lit_act_min), 2) AS gavg_lit_act_min,
+    ROUND(AVG(avg_sed_min), 2) AS gavg_sed_min,
+    ROUND(AVG(avg_calories), 2) AS gavg_calories
+FROM cte_table
+WHERE number_sleep_days IS NULL OR
+    number_sleep_days <= 5;
+```
+
+| Group B Variable | Group B Value |
+| --- | --- |
+| number of participants | 17 |
+| gave_num_dates | 27.29 |
+| gavg_tot_steps | 7207.52 |
+| gavg_tot_dist | 5.27 |
+| gavg_very_act_dist | 1.62 |
+| gavg_mod_act_dist | 0.42 |
+| gavg_lit_act_dist | 3.15 |
+| gavg_very_act_min | 18.7 |
+| gavg_fair_act_min | 9.85 |
+| gavg_lit_act_min	| 185.57 |
+| gavg_sed_min | 1183.83 |
+| gavg_calories | 2252.57 |	
