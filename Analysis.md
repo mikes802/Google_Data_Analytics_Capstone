@@ -131,7 +131,7 @@ FROM (
 ```
 I want to join a table populated with the average values for each participant from the `daily_activity` table with a table populated with the average values for each participant from the `sleep_day_cleaned` table. I know there are 3 duplicates in the `sleep_day_cleaned` table, so I will need to take that into consideration when constructing this query. I will create these two tables, `avg_daily_data` and `avg_sleep_data`.
 ```
-DROP TABLE IF EXISTS `tribal-isotope-321016.fitbit_tracker_data.avg_daily_data` 
+DROP TABLE IF EXISTS `tribal-isotope-321016.fitbit_tracker_data.avg_daily_data`;
 
 CREATE TABLE `tribal-isotope-321016.fitbit_tracker_data.avg_daily_data` AS (
     SELECT
@@ -172,7 +172,7 @@ CREATE TABLE `tribal-isotope-321016.fitbit_tracker_data.avg_sleep_data` AS (
         Id
 );
 ```
-Now I will join them using a `FULL OUTER JOIN`.
+Now I will join them using an `INNER JOIN`. This will drop the IDs of the participants who did not have any `SleepDay` records. Every participant who shows up in this table will have information for both daily activity data and sleep data.
 ```
 SELECT 
     daily_activity_data.*, sleep_day_data.*
@@ -182,3 +182,32 @@ FULL OUTER JOIN
     `tribal-isotope-321016.fitbit_tracker_data.avg_sleep_data` AS sleep_day_data ON
     daily_activity_data.Id = sleep_day_data.Id;
 ```
+I do find a few positive relationships between variables after exploring the data on Google's Data Studio.
+
+### Number of Sleep Days vs Average Light Active Distance
+
+![Sleep Days v Ave Lit Act Dist](https://user-images.githubusercontent.com/99853599/154879905-cbccfb3b-795f-4205-860e-4d0d9a0255fe.PNG)
+
+### Number of Sleep Days vs Average Light Active Minutes
+
+![Sleep Days v Ave Lit Act Min](https://user-images.githubusercontent.com/99853599/154880048-03adcf73-75b6-4bb2-a9fa-dbcb16bc0b61.PNG)
+
+### Number of Sleep Days vs Average Moderately Active Distance
+
+![Sleep Days v Ave Mod Act Dist](https://user-images.githubusercontent.com/99853599/154881242-625a6ac1-ad45-4fe3-9efd-f77c3df67d90.PNG)
+
+### Number of Sleep Days vs Average Fairly Active Minutes
+
+![Sleep Days v Fair Act Min](https://user-images.githubusercontent.com/99853599/154880883-7eec1508-7fad-41a4-b6e6-823a4b8c69dd.PNG)
+
+### Number of Sleep Days vs Average Total Distance
+
+![Sleep Days v Ave Total Dist](https://user-images.githubusercontent.com/99853599/154880524-e82e0548-d9ae-4227-b8f3-ac9cabd2d8af.PNG)
+
+There is also one clear negative relationship.
+
+### Number of Sleep Days vs Average Sedentary Minutes
+
+![Sleep Days v Ave Sed Min](https://user-images.githubusercontent.com/99853599/154880221-6d9ec679-3d94-4a73-a96b-791a6c7dedf1.PNG)
+
+
