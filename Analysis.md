@@ -298,3 +298,15 @@ WHERE number_sleep_days IS NULL OR
 | gavg_lit_act_min	| 185.57 |
 | gavg_sed_min | 1183.83 |
 | gavg_calories | 2252.57 |	
+
+Looking at how Group B compares to Group A, there are some notable results:
+1. The two groups are nearly split down the middle, with 16 participants using the sleep functions of the device for 8 days or more and 17 participants using this functionality 5 days or less.
+2. Group B averages 47% more sedentary minutes than Group A.
+3. Group B averages 42% fewer fairly active minutes than Group A.
+4. Group B averages 40% less in moderately active distance compared to Group A.
+5. In fact, Group averages less than Group B in every category except for sedentary minutes, as mentioned above, and very active distance, which is 28% more than Group A.
+
+We can see how Group B compares to Group A here in this chart:
+
+![Group B Comparison](https://user-images.githubusercontent.com/99853599/155254929-eee5241e-7ff9-47d4-a706-fbdc008ae5db.PNG)
+
