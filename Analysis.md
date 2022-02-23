@@ -182,7 +182,7 @@ FULL OUTER JOIN
     `tribal-isotope-321016.fitbit_tracker_data.avg_sleep_data` AS sleep_day_data ON
     daily_activity_data.Id = sleep_day_data.Id;
 ```
-I do find a few positive relationships between variables after exploring the data on Google's Data Studio.
+24 rows are returned. I do find a few positive relationships between variables after exploring the data on Google's Data Studio.
 
 ### Number of Sleep Days vs Average Light Active Distance
 
@@ -480,3 +480,234 @@ Here is the join query:
 >  A.Id = Sl.Id
 >  AND A.ActivityDate=Sl.SleepDay;
 >  ```
+
+I will save this table as dates_joined and then use the following query to see how many records actually include information on sleep.
+```
+SELECT *
+FROM `tribal-isotope-321016.fitbit.dates_joined`
+WHERE TotalSleepRecords IS NOT NULL;
+```
+413 records are returned. 
+
+From dates_joined, I will check the number of days records were taken and the total number of sleep records for each ID.
+```
+SELECT Id,
+    COUNT(Id) AS Number_Days,
+    SUM(TotalSleepRecords) Total_Sleep_Records
+FROM `tribal-isotope-321016.fitbit.dates_joined`
+WHERE TotalSleepRecords IS NOT NULL
+GROUP BY 1
+ORDER BY 3 DESC;
+```
+24 out of 33 participants had at least one sleep record. This matches the results I received when I completed an `INNER JOIN` on the `avg_daily_data` and `avg_sleep_data` tables.
+
+The following query should tell me, percent-wise, how many participants logged sleep records for a certain number of days.
+```
+WITH cte_table AS (
+SELECT Id,
+    COUNT(Id) AS Number_Days,
+    SUM(TotalSleepRecords) Total_Sleep_Records
+FROM `tribal-isotope-321016.fitbit.dates_joined`
+WHERE TotalSleepRecords IS NOT NULL
+GROUP BY 1
+ORDER BY 3 DESC
+)
+SELECT 
+    Number_Days,
+    COUNT(*) as count_number,
+    ROUND(
+        100 * COUNT(*) / SUM(COUNT(*)) OVER(),
+        2
+    )   AS percentage,
+    SUM(COUNT(*)) OVER() AS total_count
+FROM cte_table
+GROUP BY 1
+ORDER BY 1;
+```
+One of the results from this query show 32 days. I want to double-check the dates.
+```
+SELECT 
+    MIN(ActivityDate) earliest_date,
+    MAX(ActivityDate) latest_date,
+    DATE_DIFF(MAX(ActivityDate), MIN(ActivityDate), DAY) + 1 AS total_days 
+FROM `tribal-isotope-321016.fitbit.daily_activity`;
+```
+| earliest_date | latest_date | total_days |
+| --- | --- | --- |
+| 2016-04-12 |	2016-05-12 |	31 |
+
+Of course this begs the question: how did someone have 32 days? I know duplicates exist, so I need to check for that. I will check the specific ID.
+```
+SELECT * 
+FROM `tribal-isotope-321016.fitbit.dates_joined` 
+WHERE Id = 8378563200 
+ORDER BY ActivityDate;
+```
+It looks like there is a duplicate row on 4/25. I will use the following query to find duplicates in dates_joined.
+```
+SELECT 
+    Id,
+    Calories,
+    ActivityDate,
+    TotalSteps,
+    TotalDistance,
+    TrackerDistance,
+    LoggedActivitiesDistance,
+    StepTotal,
+    TotalSleepRecords,
+    TotalMinutesAsleep,
+    TotalTimeInBed,
+    SedentaryMinutes,
+    LightlyActiveMinutes,
+    FairlyActiveMinutes,
+    VeryActiveMinutes,
+    SedentaryActiveDistance,
+    LightActiveDistance,
+    ModeratelyActiveDistance,
+    VeryActiveDistance,
+    COUNT(*) AS frequency
+FROM
+    `tribal-isotope-321016.fitbit.dates_joined`
+GROUP BY
+    Id,
+    Calories,
+    ActivityDate,
+    TotalSteps,
+    TotalDistance,
+    TrackerDistance,
+    LoggedActivitiesDistance,
+    StepTotal,
+    TotalSleepRecords,
+    TotalMinutesAsleep,
+    TotalTimeInBed,
+    SedentaryMinutes,
+    LightlyActiveMinutes,
+    FairlyActiveMinutes,
+    VeryActiveMinutes,
+    SedentaryActiveDistance,
+    LightActiveDistance,
+    ModeratelyActiveDistance,
+    VeryActiveDistance
+ORDER BY frequency DESC;
+```
+There are three duplicates, just like I had found previously. Using the following query, I will clean up the duplicate records.
+```
+WITH cte_table AS (
+SELECT
+    Id,
+    COUNT(Id) AS Number_Days,
+    SUM(TotalSleepRecords) Total_Sleep_Records
+FROM (
+    SELECT 
+        Id,
+        TotalSleepRecords,
+    FROM
+        `tribal-isotope-321016.fitbit.dates_joined`
+    GROUP BY
+        Id,
+        Calories,
+        ActivityDate,
+        TotalSteps,
+        TotalDistance,
+        TrackerDistance,
+        LoggedActivitiesDistance,
+        StepTotal,
+        TotalSleepRecords,
+        TotalMinutesAsleep,
+        TotalTimeInBed,
+        SedentaryMinutes,
+        LightlyActiveMinutes,
+        FairlyActiveMinutes,
+        VeryActiveMinutes,
+        SedentaryActiveDistance,
+        LightActiveDistance,
+        ModeratelyActiveDistance,
+        VeryActiveDistance
+    )
+WHERE TotalSleepRecords IS NOT NULL
+GROUP BY 1
+ORDER BY 2 DESC
+)
+SELECT 
+    Number_Days,
+    COUNT(*) as count_number,
+    ROUND(
+        100 * COUNT(*) / SUM(COUNT(*)) OVER(),
+        2
+    )   AS percentage,
+    SUM(COUNT(*)) OVER() AS total_count
+FROM cte_table
+GROUP BY 1
+ORDER BY 1;
+```
+Now the most number of days is 31. This is the table that generates:
+
+| Row | Number_Days | count_number | percentage | total_count |
+|-----|-------------|--------------|------------|-------------|
+| 1   |           1 |            1 |       4.17 |          24 |
+| 2   |           2 |            1 |       4.17 |          24 |
+| 3   |           3 |            3 |       12.5 |          24 |
+| 4   |           4 |            1 |       4.17 |          24 |
+| 5   |           5 |            2 |       8.33 |          24 |
+| 6   |           8 |            1 |       4.17 |          24 |
+| 7   |          15 |            2 |       8.33 |          24 |
+| 8   |          18 |            1 |       4.17 |          24 |
+| 9   |          23 |            1 |       4.17 |          24 |
+| 10  |          24 |            1 |       4.17 |          24 |
+| 11  |          25 |            1 |       4.17 |          24 |
+| 12  |          26 |            2 |       8.33 |          24 |
+| 13  |          27 |            1 |       4.17 |          24 |
+| 14  |          28 |            3 |       12.5 |          24 |
+| 15  |          31 |            3 |       12.5 |          24 |
+
+I'm seeing a similar table to what I had before when looking at my `avg_daily_data` and `avg_sleep_data` tables. Using some addition, I find from here that:
+1. About 1/3 of those who use the sleep functionality use it from 1 - 5 days.
+2. About 17% use the sleep functionality at least 8 days but not more than 18 days.
+3. 50% use the sleep funtionality 23 days or more.
+
+I will run the following query to see if I can find any interesting trends between number of days when the sleep function was used and some other variable.
+```
+WITH cte_table AS (
+SELECT *
+FROM
+    `tribal-isotope-321016.fitbit.dates_joined`
+GROUP BY
+    Id,
+    Calories,
+    ActivityDate,
+    TotalSteps,
+    TotalDistance,
+    TrackerDistance,
+    LoggedActivitiesDistance,
+    StepTotal,
+    TotalSleepRecords,
+    TotalMinutesAsleep,
+    TotalTimeInBed,
+    SedentaryMinutes,
+    LightlyActiveMinutes,
+    FairlyActiveMinutes,
+    VeryActiveMinutes,
+    SedentaryActiveDistance,
+    LightActiveDistance,
+    ModeratelyActiveDistance,
+    VeryActiveDistance
+)
+SELECT
+    Id,
+    COUNT(Id) AS number_days,
+    MIN(ActivityDate) first_day,
+    MAX(ActivityDate) last_day,
+    ROUND(AVG(TotalSteps),2) avg_tot_steps,
+    ROUND(AVG(SedentaryMinutes),2) avg_sed_min,
+    ROUND(AVG(LightlyActiveMinutes),2) avg_light_min,
+    ROUND(AVG(FairlyActiveMinutes),2) avg_fairly_act_min,
+    ROUND(AVG(VeryActiveMinutes),2) avg_very_act_min,
+    ROUND(AVG(SedentaryActiveDistance),2) avg_sed_dist,
+    ROUND(AVG(LightActiveDistance),2) avg_light_dist,
+    ROUND(AVG(ModeratelyActiveDistance),2) avg_mod_act_dist,
+    ROUND(AVG(VeryActiveDistance),2) avg_very_act_dist
+FROM cte_table
+WHERE TotalSleepRecords IS NOT NULL
+GROUP BY 1
+ORDER BY 2 DESC
+```
