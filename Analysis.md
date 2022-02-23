@@ -304,7 +304,7 @@ Looking at how Group B compares to Group A, there are some notable results:
 2. Group B averages 47% more sedentary minutes than Group A.
 3. Group B averages 42% fewer fairly active minutes than Group A.
 4. Group B averages 40% less in moderately active distance compared to Group A.
-5. In fact, Group averages less than Group B in every category except for sedentary minutes, as mentioned above, and very active distance, which is 28% more than Group A.
+5. In fact, Group B averages less than Group A in every category except for sedentary minutes, as mentioned above, and very active distance, which is 28% more than Group A.
 
 We can see how Group B compares to Group A here in this chart:
 
