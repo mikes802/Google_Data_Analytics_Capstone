@@ -310,3 +310,173 @@ We can see how Group B compares to Group A here in this chart:
 
 ![Group B Comparison](https://user-images.githubusercontent.com/99853599/155254929-eee5241e-7ff9-47d4-a706-fbdc008ae5db.PNG)
 
+I'm going to approach this from another direction using SQL code provided by Google as follows:
+
+>  -- Say we want to do an analysis based upon daily data, this could help us to find tables that might be at the day level
+> ``` 
+>  SELECT
+>  DISTINCT table_name
+>  FROM
+>  `tribal-isotope-321016.fitbit.INFORMATION_SCHEMA.COLUMNS`
+>  WHERE
+>  REGEXP_CONTAINS(LOWER(table_name),"day|daily");
+>  ```
+
+| Row |	table_name	|
+| --- | --- |
+|1	| daily_calories |
+| 2 |	daily_activity |
+|3 | daily_intensities |
+| 4 |	 daily_steps |
+| 5 |	 sleep_day |
+
+>  -- Now that we have a list of tables we should look at the columns that are shared among the tables
+>  ```
+> SELECT
+>   column_name,
+>   data_type,
+> COUNT(table_name) AS table_count
+> FROM
+>   `tribal-isotope-321016.fitbit.INFORMATION_SCHEMA.COLUMNS`
+> WHERE
+>   REGEXP_CONTAINS(LOWER(table_name),"day|daily")
+> GROUP BY
+>   1, 2;
+
+| Row | column_name              | data_type | table_count |
+|-----|--------------------------|-----------|-------------|
+| 1   | Id                       | INT64     |           5 |
+| 2   | ActivityDay              | DATE      |           3 |
+| 3   | Calories                 | INT64     |           2 |
+| 4   | ActivityDate             | DATE      |           1 |
+| 5   | TotalSteps               | INT64     |           1 |
+| 6   | TotalDistance            | FLOAT64   |           1 |
+| 7   | TrackerDistance          | FLOAT64   |           1 |
+| 8   | LoggedActivitiesDistance | FLOAT64   |           1 |
+| 9   | VeryActiveDistance       | FLOAT64   |           2 |
+| 10  | ModeratelyActiveDistance | FLOAT64   |           2 |
+| 11  | LightActiveDistance      | FLOAT64   |           2 |
+| 12  | SedentaryActiveDistance  | FLOAT64   |           2 |
+| 13  | VeryActiveMinutes        | INT64     |           2 |
+| 14  | FairlyActiveMinutes      | INT64     |           2 |
+| 15  | LightlyActiveMinutes     | INT64     |           2 |
+| 16  | SedentaryMinutes         | INT64     |           2 |
+| 17  | StepTotal                | INT64     |           1 |
+| 18  | SleepDay                 | DATE      |           1 |
+| 19  | TotalSleepRecords        | INT64     |           1 |
+| 20  | TotalMinutesAsleep       | INT64     |           1 |
+| 21  | TotalTimeInBed           | INT64     |           1 |
+
+The next SQL query provided by Google shows which columns are shared between these tables. This information will be used to join the five tables above.
+
+>```
+> SELECT
+>  column_name,
+>  table_name,
+>  data_type
+> FROM
+>  `tribal-isotope-321016.fitbit.INFORMATION_SCHEMA.COLUMNS`
+> WHERE
+>  REGEXP_CONTAINS(LOWER(table_name),"day|daily")
+>  AND column_name IN (
+>  SELECT
+>   column_name
+>  FROM
+>   `tribal-isotope-321016.fitbit.INFORMATION_SCHEMA.COLUMNS`
+>  WHERE
+>   REGEXP_CONTAINS(LOWER(table_name),"day|daily")
+>  GROUP BY
+>   1
+>  HAVING
+>   COUNT(table_name) >=2)
+> ORDER BY
+>  1;
+> ```
+
+| Row | column_name              | table_name        | data_type |
+|-----|--------------------------|-------------------|-----------|
+| 1   | ActivityDay              | daily_calories    | DATE      |
+| 2   | ActivityDay              | daily_intensities | DATE      |
+| 3   | ActivityDay              | daily_steps       | DATE      |
+| 4   | Calories                 | daily_calories    | INT64     |
+| 5   | Calories                 | daily_activity    | INT64     |
+| 6   | FairlyActiveMinutes      | daily_activity    | INT64     |
+| 7   | FairlyActiveMinutes      | daily_intensities | INT64     |
+| 8   | Id                       | daily_calories    | INT64     |
+| 9   | Id                       | daily_activity    | INT64     |
+| 10  | Id                       | daily_intensities | INT64     |
+| 11  | Id                       | daily_steps       | INT64     |
+| 12  | Id                       | sleep_day         | INT64     |
+| 13  | LightActiveDistance      | daily_activity    | FLOAT64   |
+| 14  | LightActiveDistance      | daily_intensities | FLOAT64   |
+| 15  | LightlyActiveMinutes     | daily_activity    | INT64     |
+| 16  | LightlyActiveMinutes     | daily_intensities | INT64     |
+| 17  | ModeratelyActiveDistance | daily_activity    | FLOAT64   |
+| 18  | ModeratelyActiveDistance | daily_intensities | FLOAT64   |
+| 19  | SedentaryActiveDistance  | daily_activity    | FLOAT64   |
+| 20  | SedentaryActiveDistance  | daily_intensities | FLOAT64   |
+| 21  | SedentaryMinutes         | daily_activity    | INT64     |
+| 22  | SedentaryMinutes         | daily_intensities | INT64     |
+| 23  | VeryActiveDistance       | daily_activity    | FLOAT64   |
+| 24  | VeryActiveDistance       | daily_intensities | FLOAT64   |
+| 25  | VeryActiveMinutes        | daily_activity    | INT64     |
+| 26  | VeryActiveMinutes        | daily_intensities | INT64     |
+
+Here is the join query:
+
+> ```
+> SELECT
+>  A.Id,
+>  A.Calories,
+>  * EXCEPT(Id,
+>    Calories,
+>    ActivityDay,
+>    SleepDay,
+>    SedentaryMinutes,
+>    LightlyActiveMinutes,
+>    FairlyActiveMinutes,
+>    VeryActiveMinutes,
+>    SedentaryActiveDistance,
+>    LightActiveDistance,
+>    ModeratelyActiveDistance,
+>    VeryActiveDistance),
+>  I.SedentaryMinutes,
+>  I.LightlyActiveMinutes,
+>  I.FairlyActiveMinutes,
+>  I.VeryActiveMinutes,
+>  I.SedentaryActiveDistance,
+>  I.LightActiveDistance,
+>  I.ModeratelyActiveDistance,
+>  I.VeryActiveDistance
+> FROM
+>  `tribal-isotope-321016.fitbit.daily_activity` A
+> LEFT JOIN
+>  `tribal-isotope-321016.fitbit.daily_calories` C
+> ON
+>  A.Id = C.Id
+>  AND A.ActivityDate=C.ActivityDay
+>  AND A.Calories = C.Calories
+> LEFT JOIN
+>  `tribal-isotope-321016.fitbit.daily_intensities` I
+> ON
+>  A.Id = I.Id
+>  AND A.ActivityDate=I.ActivityDay
+>  AND A.FairlyActiveMinutes = I.FairlyActiveMinutes
+>  AND A.LightActiveDistance = I.LightActiveDistance
+>  AND A.LightlyActiveMinutes = I.LightlyActiveMinutes
+>  AND A.ModeratelyActiveDistance = I.ModeratelyActiveDistance
+>  AND A.SedentaryActiveDistance = I.SedentaryActiveDistance
+>  AND A.SedentaryMinutes = I.SedentaryMinutes
+>  AND A.VeryActiveDistance = I.VeryActiveDistance
+>  AND A.VeryActiveMinutes = I.VeryActiveMinutes
+> LEFT JOIN
+>  `tribal-isotope-321016.fitbit.daily_steps` S
+> ON
+>  A.Id = S.Id
+>  AND A.ActivityDate=S.ActivityDay
+> LEFT JOIN
+>  `tribal-isotope-321016.fitbit.sleep_day` Sl
+> ON
+>  A.Id = Sl.Id
+>  AND A.ActivityDate=Sl.SleepDay;
+>  ```
