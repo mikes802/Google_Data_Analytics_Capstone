@@ -66,6 +66,7 @@ These initial and subsequent findings could be used to drive marketing strategy.
 
 *What next steps would you or your stakeholders take based on your findings?*
 
-1. Gather more data to conduct a thorough analysis. With the 
+1. Gather more data to conduct a thorough analysis. The introduction given for this data proclaimed that there were 30 participants. Initial analysis showed that there were 33. According to the Central Limit Theorem (CLT) in the field of probability and statistics, 30 is the minimum sample size we need so that our results represent the average result of a population. This data barely covered that requirement. I believe a more robust sample size would give us much needed clarity in terms of the relationship between variables.
+2. If the initial insights bear out through further data collection and analysis, another step would be to investigate the relationship between sleep tracking and time doing sedentary activities. This could give fruit to some valuable insight that could not only help Bellabeat's business, but could further their work to "empower women with knowledge about their own health and habits".
 
 *Is there additional data you could use to expand on your findings?*
