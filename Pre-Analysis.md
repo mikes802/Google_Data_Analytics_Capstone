@@ -171,3 +171,5 @@ SELECT
 FROM `tribal-isotope-321016.fitbit.hourly_intensities`;
 ```
 I followed this method for multiple tables in order to prepare them for [analysis](/Analysis.md#analysis).
+
+Back to [table of contents](/README.md#table-of-contents)
