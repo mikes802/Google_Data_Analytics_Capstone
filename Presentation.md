@@ -70,3 +70,5 @@ These initial and subsequent findings could be used to drive marketing strategy.
 2. If the initial insights bear out through further data collection and analysis, another step would be to investigate the relationship between sleep tracking and time doing sedentary activities. This could give fruit to some valuable insight that could not only help Bellabeat's business, but could further their work to "empower women with knowledge about their own health and habits".
 
 *Is there additional data you could use to expand on your findings?*
+
+Further data would be required to bear out the results of this initial study. Also, as I mentioned above, more data in other areas may need to be collected in order to investigate the relationship between sleep tracking and time doing sedentary activities. Is there another variable that is at work here and what role does it play? This data may not be easily available or tied to any health data the company already collects on its customers. Perhaps data collection through surveys would need to be taken to bring in information on new variables, which could lead to new insights.
