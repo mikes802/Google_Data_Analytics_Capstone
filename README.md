@@ -13,6 +13,7 @@ To accomplish this and answer the business question, I will need to follow the d
 5. [Process](/Pre-Analysis.md#process)
 6. [Analysis](/Analysis.md#analysis)
 7. [Share](/Post-Analysis.md#share)
+8. [Act](/Post-Analysis.md#act)
 
 # Bellabeat Data Analysis Case Study
 ![Bellabeat](https://user-images.githubusercontent.com/99853599/154403416-a370cf23-61f5-4ab3-b390-db4239df5664.PNG)
