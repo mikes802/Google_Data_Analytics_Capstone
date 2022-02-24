@@ -54,3 +54,18 @@ I will copy the graph to Powerpoint and add clear axis labels. The result is bel
 3. Present your findings.
 
 I will bring my findings and visuals together into my final presentation.
+## Act
+### Guiding Questions
+*What is your final conclusion based on your analysis?*
+
+Given the high correlation coefficient between the number of days with sleep records and average sedentary minutes, my conclusion is that this is a significant trend tht required further analysis with much larger datasets.
+
+*How could your team and business apply your insights?*
+
+These initial and subsequent findings could be used to drive marketing strategy. For example, the company could market sleep tracking functionality to customers who track daily activity with Bellabeat wearables and maintain an average of sedentary minutes that fall within the range discovered by this analysis. On the other hand, it's possible that promoting sleep tracking to customers who maintain high average sedentary minutes could possibly encourage them to reduce their sedentary activities, promote their health, and drive customer loyalty.   
+
+*What next steps would you or your stakeholders take based on your findings?*
+
+1. Gather more data to conduct a thorough analysis. With the 
+
+*Is there additional data you could use to expand on your findings?*
