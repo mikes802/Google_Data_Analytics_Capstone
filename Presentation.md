@@ -50,3 +50,7 @@ The most significant discrepancy is between the average sedentary minutes betwee
 I will copy the graph to Powerpoint and add clear axis labels. The result is below:
 
 ![image](https://user-images.githubusercontent.com/99853599/155595659-c9c7b01f-ae0e-48f8-b96e-fdbaea30ceba.png)
+
+3. Present your findings.
+
+I will bring my findings and visuals together into my final presentation.
