@@ -665,3 +665,61 @@ I'm seeing a similar table to what I had before when looking at my `avg_daily_da
 2. About 17% use the sleep functionality at least 8 days but not more than 18 days.
 3. 50% use the sleep funtionality 23 days or more.
 
+I will run the following query to see if I can find any interesting trends between number of days when the sleep function was used and some other variable:
+```
+WITH cte_table AS (
+SELECT *
+FROM
+    `tribal-isotope-321016.fitbit.dates_joined`
+GROUP BY
+    Id,
+    Calories,
+    ActivityDate,
+    TotalSteps,
+    TotalDistance,
+    TrackerDistance,
+    LoggedActivitiesDistance,
+    StepTotal,
+    TotalSleepRecords,
+    TotalMinutesAsleep,
+    TotalTimeInBed,
+    SedentaryMinutes,
+    LightlyActiveMinutes,
+    FairlyActiveMinutes,
+    VeryActiveMinutes,
+    SedentaryActiveDistance,
+    LightActiveDistance,
+    ModeratelyActiveDistance,
+    VeryActiveDistance
+)
+SELECT
+    Id,
+    COUNT(Id) AS number_days_active,
+    SUM (CASE 
+            WHEN TotalSleepRecords IS NOT NULL THEN 1
+        ELSE 
+        0
+    END
+    ) AS number_sleep_days,
+    MIN(ActivityDate) first_day,
+    MAX(ActivityDate) last_day,
+    ROUND(AVG(TotalSteps),2) avg_tot_steps,
+    ROUND(AVG(SedentaryMinutes),2) avg_sed_min,
+    ROUND(AVG(LightlyActiveMinutes),2) avg_light_min,
+    ROUND(AVG(FairlyActiveMinutes),2) avg_fairly_act_min,
+    ROUND(AVG(VeryActiveMinutes),2) avg_very_act_min,
+    ROUND(AVG(SedentaryActiveDistance),2) avg_sed_dist,
+    ROUND(AVG(LightActiveDistance),2) avg_light_dist,
+    ROUND(AVG(ModeratelyActiveDistance),2) avg_mod_act_dist,
+    ROUND(AVG(VeryActiveDistance),2) avg_very_act_dist
+FROM cte_table
+GROUP BY 1
+ORDER BY 1 DESC;
+```
+After exploring the data in Google Data Studio, I find that the negative relationship between number_sleep_days and avg_sed_min is the most striking, as it was above. Here is the graph:
+
+### Number of Sleep Days vs Average Sedentary Minutes (Includes All Participants)
+
+![Number Sleep Days v Ave Sed Min](https://user-images.githubusercontent.com/99853599/155448434-c896e395-a3e9-4ebd-a1cd-5e7ed1ee235f.PNG)
+
+This is a steeper trend line than the previous graph because the participants who don't have any number_sleep_day values all have fairly high values for avg_sed_min. The lowest value is 1077.55. In fact, just by looking at the graph itself, aside from one outlier who used the sleep functionality for 15 days but has an avg_sed_min value of 1060.48, all of the participants who used the sleep functionality for at least 15 days fall between avg_sed_min values of 662.32 and 850.45. The remaining participants, who used the sleep functionality for 8 days or less, have avg_sed_min values of 1055.35 and higher.
