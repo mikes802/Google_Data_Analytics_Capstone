@@ -11,7 +11,7 @@ To accomplish this and answer the business question, I will need to follow the d
 3. [Ask](/Pre-Analysis.md#ask)
 4. [Prepare](/Pre-Analysis.md#prepare)
 5. [Process](/Pre-Analysis.md#process)
-6. [Analysis](/Analysis.md#analysis)
+6. [Analyze](/Analysis.md#analysis)
 7. [Share](/Post-Analysis.md#share)
 8. [Act](/Post-Analysis.md#act)
 
