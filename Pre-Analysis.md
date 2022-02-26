@@ -70,7 +70,7 @@ Yes, I have created a changelog.
 ### Key Tasks
 *1. Clean the data*
 
-Having discovered that BigQuery would not upload a table due to a problem with the datetime column, I opened the sleepDay_merged table in Excel to change that column to a date data type so that it would be recognized by BigQuery. I renamed this table sleep_day_cleaned and successfully uploaded it to my fitbit dataset in BigQuery.
+Having discovered that BigQuery would not upload a table due to a problem with the datetime column, I opened the `sleepDay_merged` table in Excel to change that column to a date data type so that it would be recognized by BigQuery. I renamed this table `sleep_day_cleaned` and successfully uploaded it to my fitbit dataset in BigQuery.
 
 Next, using the following query, I discovered that three entries looked to be duplicates.
 ```
@@ -128,20 +128,20 @@ Checked data
 ```
 head(hour_cal_df)
 ```
-Checked structure, noted 'ActivityHour' datatype as `chr` (a string).
+Checked structure, noted `ActivityHour` column datatype as `chr` (a string).
 ```
 str(hour_cal_df)
 ```
-Used pipe to filter for the columns I wanted after changing the format of the "ActivityHour" column from `chr` to `POSIXct` (TIMESTAMP). I saved as new_df dataframe.
+Used pipe to filter for the columns I wanted after changing the format of the `ActivityHour` column from `chr` to `POSIXct` (TIMESTAMP). I saved as `new_df` dataframe.
 ```
 new_df <- mutate(hour_cal_df, date_time=mdy_hms(ActivityHour)) %>% 
   select(Id, date_time, Calories)
 ```
-Checked data
+Checked data.
 ```
 head(new_df)
 ```
-Checked structure and noted that new 'date_time' column data type is now `POSIXct` (TIMESTAMP).
+Checked structure and noted that new `date_time` column data type is now `POSIXct` (TIMESTAMP).
 ```
 str(new_df)
 ```
