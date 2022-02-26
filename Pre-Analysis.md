@@ -132,7 +132,7 @@ Checked structure, noted `ActivityHour` column datatype as `chr` (a string).
 ```
 str(hour_cal_df)
 ```
-Used pipe to filter for the columns I wanted after changing the format of the `ActivityHour` column from `chr` to `POSIXct` (TIMESTAMP). I saved as `new_df` dataframe.
+Used pipe to filter for the columns I wanted after changing the format of the `ActivityHour` column from `chr` to `POSIXct` (`TIMESTAMP`). I saved as `new_df` dataframe.
 ```
 new_df <- mutate(hour_cal_df, date_time=mdy_hms(ActivityHour)) %>% 
   select(Id, date_time, Calories)
@@ -141,7 +141,7 @@ Checked data.
 ```
 head(new_df)
 ```
-Checked structure and noted that new `date_time` column data type is now `POSIXct` (TIMESTAMP).
+Checked structure and noted that new `date_time` column data type is now `POSIXct` (`TIMESTAMP`).
 ```
 str(new_df)
 ```
