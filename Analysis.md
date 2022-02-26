@@ -541,7 +541,7 @@ ORDER BY 1;
 | 13  |          31 |            2 |       8.33 |          24 |
 | 14  |          32 |            1 |       4.17 |          24 |
 
-One of the results from this query shows 32 days. I want to double-check the dates.
+One of the results from this query shows 32 days. I want to double-check the activity dates.
 ```
 SELECT 
     MIN(ActivityDate) earliest_date,
