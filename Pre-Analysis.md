@@ -149,7 +149,7 @@ Wrote this dataframe to csv.
 ```
 write.csv(new_df, "...\\hour_cal_date_fixed.csv")
 ```
-While this method did work, I wanted to see if there was an easier way to do this directly in BigQuery. One table in particular was actually larger after I cleaned it using R and was impossible to upload to BigQuery. I settled on the following method.
+While this method did work, I wanted to see if there was an easier way to do this directly in BigQuery. One table in particular was actually larger after I cleaned it using R and was impossible to upload to BigQuery. I settled on the following method:
 1. I manually changed data types to `STRINGS` within the schema when uploading to BigQuery.
 2. I could then `CAST` some strings to `INT64` and `PARSE` the date column to `TIMESTAMP` as I did for the following `hourly_intensities` table for example.
 ```
