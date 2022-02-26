@@ -40,7 +40,7 @@ To share the most significant value differences between Group A and Group B, the
 
 The most significant discrepancy is between the average sedentary minutes from both groups. I want to show my scatter plot with the trendline, but I think the graph itself looks weak after I paste it into Powerpoint. I will use Tableau to see if I can make a more visually pleasing scatter plot. To do this, I will first download to csv the resultant values that were returned from my last query in BigQuery. I will then upload that dataset into Tableau. I will then do the following:
 
-1. Click on `Id` so that this is the dimension.
+1. Double click on `Id` so that this is the dimension.
 2. Drag `Avg Sed Min` to the Columns field so that it is my x axis.
 3. Drag `Number Sleep Days` to the Rows field so that it is y axis.
 4. Drag `Id` to the Detail box so that the Id's appear as plot points on the graph.
