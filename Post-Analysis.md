@@ -28,7 +28,7 @@ I will create a presentation using Microsoft Powerpoint. I will be able to show 
 
 2. Create effective data visualizations.
 
-To share the most significant value differences between Group A and Group B, the two groups I mentioned above, I think simple bar graphs with simple annotation should suffice. I downloaded the relevant data from BigQuery into cvs files and will use Excel to intially create the bar graphs. I will then copy them into Powerpoint where I can edit and enhance them visually, showing the percent change, etc. I chose to only make four bar graphs based on four values, representing the largest discrepancies between the two groups. I think this is cleaner and more compelling than using the graph I generated during my analysis. 
+To share the most significant value differences between Group A and Group B, the two groups I mentioned above, I think simple bar graphs with simple annotation should suffice. I downloaded the relevant data from BigQuery into csv files and will use Excel to intially create the bar graphs. I will then copy them into Powerpoint where I can edit and enhance them visually, showing the percent change, etc. I chose to only make four bar graphs based on four values, representing the largest discrepancies between the two groups. I think this is cleaner and more compelling than using the graph I generated during my analysis. 
 
 ![Presentation Group Comparison Ave Fair Act Min](https://user-images.githubusercontent.com/99853599/155593304-4f65771e-0eba-4b7f-a17b-c32ea06e0496.png)
 
