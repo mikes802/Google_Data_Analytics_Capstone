@@ -210,7 +210,7 @@ There is also one clear negative relationship.
 
 ![Sleep Days v Ave Sed Min](https://user-images.githubusercontent.com/99853599/154880221-6d9ec679-3d94-4a73-a96b-791a6c7dedf1.PNG)
 
-I notice that there is a fairly clear demarcation between those who used logged sleep days and those who barely did or simply did not. I want to check the average numbers between the two groups. I will demarcate the groups at <= 5 days and >= 8 days.
+I notice that there is a fairly clear demarcation between those who frequently logged sleep days and those who barely did or simply did not. I want to check the average numbers between the two groups. I will demarcate the groups at <= 5 days and >= 8 days.
 
 Group A is >= 8 days and 16 participants meet this criteria.
 ```
