@@ -481,7 +481,7 @@ Here is the join query:
 >  AND A.ActivityDate=Sl.SleepDay;
 >  ```
 
-I will save this table as dates_joined and then use the following query to see how many records actually include information on sleep.
+I will save this table as `dates_joined` and then use the following query to see how many records actually include information on sleep.
 ```
 SELECT *
 FROM `tribal-isotope-321016.fitbit.dates_joined`
@@ -489,7 +489,7 @@ WHERE TotalSleepRecords IS NOT NULL;
 ```
 413 records are returned. 
 
-From dates_joined, I will check the number of days records were taken and the total number of sleep records for each ID.
+From `dates_joined`, I will check the number of days records were taken and the total number of sleep records for each ID.
 ```
 SELECT Id,
     COUNT(Id) AS Number_Days,
