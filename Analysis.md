@@ -29,7 +29,7 @@ SELECT
 FROM 
     `tribal-isotope-321016.fitbit_tracker_data.sleep_day_cleaned`;
 ```
-Curiously, in the daily activity table, there are 33 distinct IDs. We were told in the description of the data on Kaggle that there are only 30 participants.
+Curiously, in the `daily_activity` table, there are 33 distinct IDs. We are told in the description of the data on Kaggle that there are only 30 participants.
 ```
 SELECT 
     COUNT(DISTINCT Id)
@@ -114,7 +114,7 @@ The following information is returned. Note that I did not round in the query. T
 |standard_deviation | 30.70 |
 | variance_value | 942.21 |
 
-I now want to see if I can find any trends between the data from activity and sleep tables, `daily_activity` and `sleep_day_cleaned` respectively. First, I will confirm that there are no duplicates in the `daily_activity` table.
+I now want to see if I can find any trends between the data from the activity and sleep tables, `daily_activity` and `sleep_day_cleaned` respectively. First, I will confirm that there are no duplicates in the `daily_activity` table.
 ```
 SELECT  
     COUNT(*)
@@ -178,7 +178,7 @@ SELECT
     daily_activity_data.*, sleep_day_data.*
 FROM 
     `tribal-isotope-321016.fitbit_tracker_data.avg_daily_data` AS daily_activity_data
-FULL OUTER JOIN
+INNER JOIN
     `tribal-isotope-321016.fitbit_tracker_data.avg_sleep_data` AS sleep_day_data ON
     daily_activity_data.Id = sleep_day_data.Id;
 ```
@@ -210,7 +210,7 @@ There is also one clear negative relationship.
 
 ![Sleep Days v Ave Sed Min](https://user-images.githubusercontent.com/99853599/154880221-6d9ec679-3d94-4a73-a96b-791a6c7dedf1.PNG)
 
-I notice that there is a fairly clear demarcation between those who actively used the sleep functions and those who barely used them or didn't use them at all. I want to check the average numbers between the two groups. I will demarcate the groups at <= 5 days and >= 8 days.
+I notice that there is a fairly clear demarcation between those who used logged sleep days and those who barely did or simply did not. I want to check the average numbers between the two groups. I will demarcate the groups at <= 5 days and >= 8 days.
 
 Group A is >= 8 days and 16 participants meet this criteria.
 ```
@@ -255,7 +255,7 @@ WHERE number_sleep_days >= 8;
 | gavg_sed_min | 802.92 |
 | gavg_calories | 2314.19 |	
 
-Group B is <= 5 days and 17 participants meet this criteria. For this query I will have to do a `FULL OUTER JOIN` to bring back in those participants whose sleep data `IS NULL`. In other words, they didn't use the sleep functionality at all.
+Group B is <= 5 days and 17 participants meet this criteria. For this query I will have to do a `FULL OUTER JOIN` to bring back in those participants whose sleep data `IS NULL`. In other words, they didn't log any sleep days at all.
 ```
 WITH cte_table AS (
     SELECT 
@@ -300,7 +300,7 @@ WHERE number_sleep_days IS NULL OR
 | gavg_calories | 2252.57 |	
 
 Looking at how Group B compares to Group A, there are some notable results:
-1. The two groups are nearly split down the middle, with 16 participants using the sleep functions of the device for 8 days or more and 17 participants using this functionality 5 days or less.
+1. The two groups are nearly split down the middle, with 16 participants logging 8 or more sleep days and 17 participants logging 5 days or less.
 2. Group B averages 47% more sedentary minutes than Group A.
 3. Group B averages 42% fewer fairly active minutes than Group A.
 4. Group B averages 40% less in moderately active distance compared to Group A.
@@ -524,7 +524,24 @@ FROM cte_table
 GROUP BY 1
 ORDER BY 1;
 ```
-One of the results from this query show 32 days. I want to double-check the dates.
+| Row | Number_Days | count_number | percentage | total_count |
+|-----|-------------|--------------|------------|-------------|
+| 1   |           1 |            1 |       4.17 |          24 |
+| 2   |           2 |            1 |       4.17 |          24 |
+| 3   |           3 |            3 |       12.5 |          24 |
+| 4   |           4 |            1 |       4.17 |          24 |
+| 5   |           5 |            2 |       8.33 |          24 |
+| 6   |           8 |            1 |       4.17 |          24 |
+| 7   |          15 |            2 |       8.33 |          24 |
+| 8   |          18 |            1 |       4.17 |          24 |
+| 9   |          24 |            2 |       8.33 |          24 |
+| 10  |          25 |            1 |       4.17 |          24 |
+| 11  |          26 |            2 |       8.33 |          24 |
+| 12  |          28 |            4 |      16.67 |          24 |
+| 13  |          31 |            2 |       8.33 |          24 |
+| 14  |          32 |            1 |       4.17 |          24 |
+
+One of the results from this query shows 32 days. I want to double-check the dates.
 ```
 SELECT 
     MIN(ActivityDate) earliest_date,
@@ -543,7 +560,14 @@ FROM `tribal-isotope-321016.fitbit.dates_joined`
 WHERE Id = 8378563200 
 ORDER BY ActivityDate;
 ```
-It looks like there is a duplicate row on 4/25. I will use the following query to find duplicates in dates_joined.
+It looks like there is a duplicate row on 4/25. Here's a truncated table:
+
+| Row | Id         | Calories | ActivityDate | TotalSteps | TotalDistance    | TrackerDistance  | LoggedActivitiesDistance | StepTotal |
+|-----|------------|----------|--------------|------------|------------------|------------------|--------------------------|-----------|
+| 14  | 8378563200 |     4005 | 2016-04-25   |      12405 | 9.84000015258789 | 9.84000015258789 |          2.0921471118927 |     12405 |
+| 15  | 8378563200 |     4005 | 2016-04-25   |      12405 | 9.84000015258789 | 9.84000015258789 |          2.0921471118927 |     12405 |
+
+I will use the following query to find duplicates in `dates_joined`.
 ```
 SELECT 
     Id,
@@ -665,7 +689,7 @@ I'm seeing a similar table to what I had before when looking at my `avg_daily_da
 2. About 17% use the sleep functionality at least 8 days but not more than 18 days.
 3. 50% use the sleep funtionality 23 days or more.
 
-I will run the following query to see if I can find any interesting trends between number of days when the sleep function was used and some other variable:
+I will run the following query to see if I can find any interesting trends between number of logged sleep days and some other variable:
 ```
 WITH cte_table AS (
 SELECT *
@@ -722,7 +746,7 @@ After exploring the data in Google Data Studio, I find that the negative relatio
 
 ![Number Sleep Days v Ave Sed Min](https://user-images.githubusercontent.com/99853599/155448434-c896e395-a3e9-4ebd-a1cd-5e7ed1ee235f.PNG)
 
-This is a steeper trend line than the previous graph because the participants who don't have any number_sleep_day values all have fairly high values for avg_sed_min. The lowest value is 1077.55. In fact, just by looking at the graph itself, aside from one outlier who used the sleep functionality for 15 days but has an avg_sed_min value of 1060.48, all of the participants who used the sleep functionality for at least 15 days fall between avg_sed_min values of 662.32 and 850.45. The remaining participants, who used the sleep functionality for 8 days or less, have avg_sed_min values of 1055.35 and higher.
+This is a steeper trend line than the previous graph because the participants who don't have any `number_sleep_day` values all have fairly high values for `avg_sed_min`. The lowest value is 1077.55. In fact, just by looking at the graph itself, aside from one outlier who logged 15 sleep days but has an `avg_sed_min` value of 1060.48, all of the participants who logged at least 15 sleep days fall between `avg_sed_min` values of 662.32 and 850.45. The remaining participants, who logged 8 sleep days or less, have `avg_sed_min` values of 1055.35 and higher.
 
 I will use the insights I gained above to answer the questions in the [post-analysis](/Post-Analysis.md#post-analysis) and to draft my presentation.
 
