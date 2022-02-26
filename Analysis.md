@@ -664,7 +664,7 @@ FROM cte_table
 GROUP BY 1
 ORDER BY 1;
 ```
-Now the most number of days is 31. This is the table that generates:
+Now the hightest number of days is 31. This is the table that generates:
 
 | Row | Number_Days | count_number | percentage | total_count |
 |-----|-------------|--------------|------------|-------------|
