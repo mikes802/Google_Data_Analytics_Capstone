@@ -14,6 +14,7 @@ To accomplish this and answer the business question, I will need to follow the d
 6. [Analyze](/Analysis.md#analysis)
 7. [Share](/Post-Analysis.md#share)
 8. [Act](/Post-Analysis.md#act)
+9. [Presentation](/Presentation/README.md#presentation)
 
 # Bellabeat Data Analysis Case Study
 ![Bellabeat](https://user-images.githubusercontent.com/99853599/154403416-a370cf23-61f5-4ab3-b390-db4239df5664.PNG)
