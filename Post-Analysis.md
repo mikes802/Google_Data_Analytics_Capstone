@@ -38,7 +38,7 @@ To share the most significant value differences between Group A and Group B, the
 
 ![Presentation Group Comparison Ave Sed Min](https://user-images.githubusercontent.com/99853599/155593555-cde5f4dd-8af6-49ec-b6cd-2936d376fe12.png)
 
-The most significant discrepancy is between the average sedentary minutes between the two groups. I want to show my scatterplot graph with the trendline, but I don't think the graph itself looks weak after I paste it into Powerpoint. I will use Tableau to see if I can make a more visually pleasing scatterplot. To do this, I will first download to csv the resultant values that were returned from my last query in BigQuery. I will then upload that dataset into Tableau. I will then do the following:
+The most significant discrepancy is between the average sedentary minutes from both groups. I want to show my scatterplot graph with the trendline, but I don't think the graph itself looks weak after I paste it into Powerpoint. I will use Tableau to see if I can make a more visually pleasing scatterplot. To do this, I will first download to csv the resultant values that were returned from my last query in BigQuery. I will then upload that dataset into Tableau. I will then do the following:
 
 1. Click on Id so that this is the dimension.
 2. Drag Avg Sed Min to the Columns field so that it is my x axis.
