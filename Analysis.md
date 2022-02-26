@@ -367,7 +367,7 @@ I'm going to approach this from another direction using SQL code provided by Goo
 | 20  | TotalMinutesAsleep       | INT64     |           1 |
 | 21  | TotalTimeInBed           | INT64     |           1 |
 
-The next SQL query provided by Google shows which columns are shared between these tables. This information will be used to join the five tables above.
+The next SQL query provided by Google shows specifically which tables share which columns. This information will be used to join the five tables above.
 
 >```
 > SELECT
@@ -740,7 +740,7 @@ FROM cte_table
 GROUP BY 1
 ORDER BY 1 DESC;
 ```
-After exploring the data in Google Data Studio, I find that the negative relationship between number_sleep_days and avg_sed_min is the most striking, as it was above. Here is the graph:
+After exploring the data in Google Data Studio, I find that the negative relationship between `number_sleep_days` and `avg_sed_min` is the most striking, as it was above. Here is the graph:
 
 ### Number of Sleep Days vs Average Sedentary Minutes (Includes All Participants)
 
