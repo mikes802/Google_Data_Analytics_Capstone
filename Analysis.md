@@ -524,6 +524,7 @@ FROM cte_table
 GROUP BY 1
 ORDER BY 1;
 ```
+
 | Row | Number_Days | count_number | percentage | total_count |
 |-----|-------------|--------------|------------|-------------|
 | 1   |           1 |            1 |       4.17 |          24 |
@@ -549,6 +550,7 @@ SELECT
     DATE_DIFF(MAX(ActivityDate), MIN(ActivityDate), DAY) + 1 AS total_days 
 FROM `tribal-isotope-321016.fitbit.daily_activity`;
 ```
+
 | earliest_date | latest_date | total_days |
 | --- | --- | --- |
 | 2016-04-12 |	2016-05-12 |	31 |
